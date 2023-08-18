@@ -1,0 +1,18 @@
+const { Client } = require('@elastic/elasticsearch')
+const client = new Client({
+    node: 'https://9581bdf4cb5d4b4b9bc1482b84ee70d6.eu-central-1.aws.cloud.es.io',
+    auth: {
+        apiKey: { // API key ID and secret
+            id: 'foo',
+            api_key: 'bar',
+          }
+    }
+})
+
+exports.handler = async (event, context) => {
+    const data = event.body;
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ message: event.body })
+    };
+}
