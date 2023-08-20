@@ -1,0 +1,22 @@
+{
+  "name": "heatit-functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sensorvalues.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node sensorvalues.js"
+  },
+  "keywords": [
+    "Sand"
+  ],
+  "author": "Pontus Kindblad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Desdichado/heatit/issues"
+  },
+  "homepage": "https://github.com/Desdichado/heatit#readme",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.9.0"
+  }
+}

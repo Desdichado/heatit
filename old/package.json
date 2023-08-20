@@ -4,8 +4,11 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "prebuild" : "cd functions/sensorvalues && npm i",
+    "build": "gatsby build"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Desdichado/heatit.git"
