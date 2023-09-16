@@ -7,7 +7,7 @@
     "docs": "node ./scripts/generateDocs.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "npm run build && netlify deploy -p",
+    "deploy": "npm run build && netlify deploy -p;node ./scripts/installer.js",
     "presetup": "node ./scripts/installer.js"
   },
   "keywords": [],
