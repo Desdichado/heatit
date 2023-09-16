@@ -22,10 +22,11 @@
     "globby": "^9.1.0",
     "graphql": "^14.7.0",
     "graphql-tools": "^4.0.8",
-    "recursive-readdir": "^2.2.2",
+    "markdown-magic": "^2.6.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "recursive-readdir": "^2.2.2"
   },
   "browserslist": [
     ">0.2%",
