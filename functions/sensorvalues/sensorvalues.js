@@ -67,7 +67,7 @@ exports.handler = async (event, context) => {
         }
       
         //const count = await client.count({ index: 'sandbatteri-stream-dev' })
-        console.log(count)
+        //console.log(count)
         return {
             statusCode: 200,
             headers: {
