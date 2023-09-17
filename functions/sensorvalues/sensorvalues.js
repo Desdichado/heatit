@@ -35,6 +35,8 @@ exports.handler = async (event, context) => {
                 "sensorType": entry.sensorType,
                 "sensorId": entry.sensorId
             }));
+            logicEval(entry);
+            
         }
         // Save data locally
         //fs.appendFileSync(DATA_FILE, bulkData.join('\n'));
