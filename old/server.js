@@ -50,7 +50,7 @@ app.post('/sensor', async (req, res) => {
                 'Authorization':'Basic ZWxhc3RpYzpwdnNrSGJzN0hnNkZudGx1cndEd1lpNm8='
             }
         });
-        res.json({ message: "Data received, saved, and forwarded", commands: JSON.stringify(returnCommands)});
+        res.status(200).json({ message: "Data received, saved, and forwarded", commands: JSON.stringify(returnCommands)});
         console.log ("Data received, saved, and forwarded");
     } catch (error) {
         res.status(200).json({ message: "Error forwarding data to Elasticsearch", error: error.message, commands: JSON.stringify(returnCommands) });
