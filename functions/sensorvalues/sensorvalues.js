@@ -28,6 +28,7 @@ exports.handler = async (event, context) => {
         }
     
         const bulkData = [];
+        returnCommands = [];
         for (const entry of data) {
             bulkData.push(JSON.stringify({
                 "@timestamp": new Date().toISOString(),
@@ -36,7 +37,7 @@ exports.handler = async (event, context) => {
                 "sensorId": entry.sensorId
             }));
             logicEval(entry);
-            
+
         }
         // Save data locally
         //fs.appendFileSync(DATA_FILE, bulkData.join('\n'));
@@ -94,63 +95,64 @@ exports.handler = async (event, context) => {
         },
         body: "{status: 'ok'}"
     };
-    function logicEval(entry){
-        if (entry.sensorType == "temp pipe"){
-            switch(entry.sensorId){
-                case "heaterEntry":
-                    if (entry.sensorValue > 630){
-                        returnCommands.push({command: "heater", value: "off"});
-                        console.log("Temperature before heater is too high. Turning off heater.");
-                    }
-                    break;
-                case "heaterExit":
-                    if (entry.sensorValue > 630){
-                        returnCommands.push({command: "heater", value: "off"});
-                        console.log("Temperature after heater is too high. Turning off heater.");
-                    }
-                    break;
-                default:
-                    console.log("unknown sensor id on "+entry.sensorType+": " + entry.sensorId);
-                    break;
-            }
-        }
-        if (entry.sensorType == "temp water"){
-            switch(entry.sensorId){
-                case "waterExit":
-                    if (entry.sensorValue > 85){
-                        returnCommands.push({command: "heater", value: "off"});
-                        returnCommands.push({command: "fan", value: "off"});
-                        console.log("Water temperature is too high, turning off heater and fan.");
-    
-                    }
-                    break;
-                case "waterEntry":
-                    if (entry.sensorValue > 80){
-                        returnCommands.push({command: "fan", value: "off"});
-                        returnCommands.push({command: "heater", value: "off"});
-                        console.log("Temperature before heat transfer is too high. Turning off heater and fan.");
-                    }
-                    break;
-                case "waterTank":
-                    if (entry.sensorValue > 90){
-                        returnCommands.push({command: "pump", value: "off"});
-                        console.log("Temperature in water tank is too high. Turning off pump.");
-                    }
-                    if (entry.sensorValue < 60){
-                        returnCommands.push({command: "pump", value: "on"});
-                        returnCommands.push({command: "heater", value: "on"});
-                        returnCommands.push({command: "fan", value: "on"});
-                        console.log("Temperature in water tank too low. Turning on heater, pump and fan.");
-                    }
-                    break;
-               default:
-                    console.log("unknown sensor id on "+entry.sensorType+": " + entry.sensorId);
-                    break;
-            }
-        }
-        if (entry.sensorType == "battery"){
-            if (entry.sensorValue < 30){
-                console.log("Battery is low");
-            }
+
+function logicEval(entry){
+    if (entry.sensorType == "temp pipe"){
+        switch(entry.sensorId){
+            case "heaterEntry":
+                if (entry.sensorValue > 630){
+                    returnCommands.push({command: "heater", value: "off"});
+                    console.log("Temperature before heater is too high. Turning off heater.");
+                }
+                break;
+            case "heaterExit":
+                if (entry.sensorValue > 630){
+                    returnCommands.push({command: "heater", value: "off"});
+                    console.log("Temperature after heater is too high. Turning off heater.");
+                }
+                break;
+            default:
+                console.log("unknown sensor id on "+entry.sensorType+": " + entry.sensorId);
+                break;
         }
     }
+    if (entry.sensorType == "temp water"){
+        switch(entry.sensorId){
+            case "waterExit":
+                if (entry.sensorValue > 85){
+                    returnCommands.push({command: "heater", value: "off"});
+                    returnCommands.push({command: "fan", value: "off"});
+                    console.log("Water temperature is too high, turning off heater and fan.");
+
+                }
+                break;
+            case "waterEntry":
+                if (entry.sensorValue > 80){
+                    returnCommands.push({command: "fan", value: "off"});
+                    returnCommands.push({command: "heater", value: "off"});
+                    console.log("Temperature before heat transfer is too high. Turning off heater and fan.");
+                }
+                break;
+            case "waterTank":
+                if (entry.sensorValue > 90){
+                    returnCommands.push({command: "pump", value: "off"});
+                    console.log("Temperature in water tank is too high. Turning off pump.");
+                }
+                if (entry.sensorValue < 60){
+                    returnCommands.push({command: "pump", value: "on"});
+                    returnCommands.push({command: "heater", value: "on"});
+                    returnCommands.push({command: "fan", value: "on"});
+                    console.log("Temperature in water tank too low. Turning on heater, pump and fan.");
+                }
+                break;
+            default:
+                console.log("unknown sensor id on "+entry.sensorType+": " + entry.sensorId);
+                break;
+        }
+    }
+    if (entry.sensorType == "battery"){
+        if (entry.sensorValue < 30){
+            console.log("Battery is low");
+        }
+    }
+}
