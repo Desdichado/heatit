@@ -159,7 +159,7 @@ function logicEval(entry){
 
 //remove double commands and return the prioritized value
 function filterCommands(commands){
-    var prioritizedValues = [{command: "heater", value: "off"}, {command: "fan", value: "off"}, {command: "pump", value: "off"}];
+    var prioritizedValues = [{command: "heater", value: "off"}, {command: "fan", value: "on"}, {command: "pump", value: "on"}];
     var filteredCommands = [];
     var foundCommands = [];
     for (const command of commands){
