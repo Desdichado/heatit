@@ -77,7 +77,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Headers': '*',
                 'Access-Control-Allow-Credentials': 'true'
             },
-            body: { message: "Data received, saved, and forwarded", commands: JSON.stringify(returnCommands)}
+            body: "{ message: \"Data received, saved, and forwarded\", commands: JSON.stringify(returnCommands)}"
         };
       }
     
