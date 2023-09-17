@@ -37,8 +37,8 @@ exports.handler = async (event, context) => {
                 "sensorId": entry.sensorId
             }));
             logicEval(entry);
-
         }
+        filterCommands(returnCommands);
         // Save data locally
         //fs.appendFileSync(DATA_FILE, bulkData.join('\n'));
     
@@ -155,4 +155,19 @@ function logicEval(entry){
             console.log("Battery is low");
         }
     }
+}
+
+//remove double commands and return the prioritized value
+function filterCommands(commands){
+    var prioritizedValues = [{command: "heater", value: "off"}, {command: "fan", value: "off"}, {command: "pump", value: "off"}];
+    var filteredCommands = [];
+    var foundCommands = [];
+    for (const command of commands){
+        if (foundCommands.includes(command.command)){
+            continue;
+        }
+        foundCommands.push(command.command);
+        filteredCommands.push(prioritizedValues.find(x => x.command == command.command));
+    }
+    returnCommands = filteredCommands;
 }
