@@ -1,6 +1,6 @@
 const { Client } = require('@elastic/elasticsearch')
 require('array.prototype.flatmap').shim();
-returnCommands = [];
+var returnCommands = [];
 exports.handler = async (event, context) => {
         const client = new Client({
         cloud: {
@@ -66,7 +66,7 @@ exports.handler = async (event, context) => {
           console.log(erroredDocuments)
         }
       
-        const count = await client.count({ index: 'sandbatteri-stream-dev' })
+        //const count = await client.count({ index: 'sandbatteri-stream-dev' })
         console.log(count)
         return {
             statusCode: 200,
