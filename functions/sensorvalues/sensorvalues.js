@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
         console.error('Error fetching data:', error);
       });
 
-    return gp;
+    return "ok";
         const client = new Client({
         cloud: {
             id: 'kmit-production:ZXUtY2VudHJhbC0xLmF3cy5jbG91ZC5lcy5pbzo0NDMkOTU4MWJkZjRjYjVkNGI0YjliYzE0ODJiODRlZTcwZDYkOTkwYTNlMzk4YTk1NDc2NWIwNzhiNmJmZWViNTNlMGE=',
