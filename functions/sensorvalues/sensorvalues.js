@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
         "Content-Type": 'application/json'
       };
     request(tibberUrl, pricequery, undefined, headers).then((data) => {
-        console.log(data)
+        console.log("data:" + data)
     }).catch((error) => {
         console.error('Error fetching data:', error);
       });
