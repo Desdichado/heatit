@@ -20,7 +20,17 @@ exports.handler = async (event, context) => {
         console.error('Error fetching data:', error);
       });
 
-    return "ok";
+      return {
+        statusCode: 200,
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Credentials': 'true'
+        },
+        body: "{ message: \"breaking after startquery\"}"
+    };
         const client = new Client({
         cloud: {
             id: 'kmit-production:ZXUtY2VudHJhbC0xLmF3cy5jbG91ZC5lcy5pbzo0NDMkOTU4MWJkZjRjYjVkNGI0YjliYzE0ODJiODRlZTcwZDYkOTkwYTNlMzk4YTk1NDc2NWIwNzhiNmJmZWViNTNlMGE=',
