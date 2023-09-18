@@ -1,7 +1,26 @@
-const { Client } = require('@elastic/elasticsearch')
+const { Client } = require('@elastic/elasticsearch');
+const fs = require('fs');
+const { request } = require('graphql-request');
+const { exit } = require('process');
+
+
+const tibberUrl = "https://api.tibber.com/v1-beta/gql";
+
 require('array.prototype.flatmap').shim();
 var returnCommands = [];
 exports.handler = async (event, context) => {
+    var pricequery = '{ viewer { login name homes { currentSubscription { priceInfo{ today{ energy startsAt level } tomorrow{ energy startsAt level }}}}}}';
+    const headers = {
+        Authorization: 'Bearer Mjl7mTBUzFZhFwLDA9JP0mhnMVo2tk6R9uBTG3IVntA',
+        "Content-Type": 'application/json'
+      };
+    request(tibberUrl, pricequery, undefined, headers).then((data) => {
+        console.log(data)
+    }).catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+
+    return gp;
         const client = new Client({
         cloud: {
             id: 'kmit-production:ZXUtY2VudHJhbC0xLmF3cy5jbG91ZC5lcy5pbzo0NDMkOTU4MWJkZjRjYjVkNGI0YjliYzE0ODJiODRlZTcwZDYkOTkwYTNlMzk4YTk1NDc2NWIwNzhiNmJmZWViNTNlMGE=',
@@ -170,4 +189,9 @@ function filterCommands(commands){
         filteredCommands.push(prioritizedValues.find(x => x.command == command.command));
     }
     returnCommands = filteredCommands;
+}
+
+//function that will get the electric prices from tibber
+function getPrices(){
+    var extbody;
 }
