@@ -1,5 +1,4 @@
 const { Client } = require('@elastic/elasticsearch');
-const fs = require('fs');
 const { request } = require('graphql-request');
 const { exit } = require('process');
 
@@ -9,7 +8,8 @@ const tibberUrl = "https://api.tibber.com/v1-beta/gql";
 require('array.prototype.flatmap').shim();
 var returnCommands = [];
 var responsedata = "no data";
-var acceptablePriceLevels = ["CHEAP","VERY_CHEAP","NORMAL"]; 
+var acceptablePriceLevels = ["CHEAP","VERY_CHEAP"]; 
+var crapdata = [980];
 exports.handler = async (event, context) => {
     //var pricequery = '{ viewer { homes { currentSubscription { priceInfo{ today{ energy startsAt level } tomorrow{ energy startsAt level } current { energy startsAt level } } } } } }';
     var pricequery = '{ viewer { homes { currentSubscription { priceInfo{ current { energy startsAt level } } } } } }';
@@ -63,6 +63,10 @@ exports.handler = async (event, context) => {
             console.log("Worth buying, turning on heater and fan.");
         }
         for (const entry of data) {
+            if (crapdata.includes(entry.sensorValue)){
+                console.log("crapdata detected, skipping");
+                continue;
+            }
             bulkData.push(JSON.stringify({
                 "@timestamp": new Date().toISOString(),
                 "sensorValue": entry.sensorValue,
