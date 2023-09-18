@@ -8,33 +8,29 @@ const tibberUrl = "https://api.tibber.com/v1-beta/gql";
 
 require('array.prototype.flatmap').shim();
 var returnCommands = [];
+var responsedata = "no data";
+var acceptablePriceLevels = ["CHEAP","VERY_CHEAP","NORMAL"]; 
 exports.handler = async (event, context) => {
-    var responsedata = "no data";
-    var pricequery = '{ viewer { login name homes { currentSubscription { priceInfo{ today{ energy startsAt level } tomorrow{ energy startsAt level }}}}}}';
+    //var pricequery = '{ viewer { homes { currentSubscription { priceInfo{ today{ energy startsAt level } tomorrow{ energy startsAt level } current { energy startsAt level } } } } } }';
+    var pricequery = '{ viewer { homes { currentSubscription { priceInfo{ current { energy startsAt level } } } } } }';
+    let worthBuying = false;
     const headers = {
         Authorization: 'Bearer Mjl7mTBUzFZhFwLDA9JP0mhnMVo2tk6R9uBTG3IVntA',
         "Content-Type": 'application/json'
       };
-    request(tibberUrl, pricequery, undefined, headers).then((data) => {
-        console.log("data:" + data);
-        responsedata = data;
+    await request(tibberUrl, pricequery, undefined, headers).then((data) => {
+        console.log(JSON.stringify(data));
+        if (acceptablePriceLevels.includes(data.viewer.homes[0].currentSubscription.priceInfo.current.level)){
+            worthBuying = true;
+        }
+        console.log("worth buying: "+worthBuying+" because of price level: "+data.viewer.homes[0].currentSubscription.priceInfo.current.level);
+        responsedata = JSON.stringify(data);
     }).catch((error) => {
         console.error('Error fetching data:', error);
         responsedata = error;
       });
 
-      return {
-        statusCode: 200,
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Credentials': 'true'
-        },
-        body: "{ message: "+responsedata+"}"
-    };
-        const client = new Client({
+    const client = new Client({
         cloud: {
             id: 'kmit-production:ZXUtY2VudHJhbC0xLmF3cy5jbG91ZC5lcy5pbzo0NDMkOTU4MWJkZjRjYjVkNGI0YjliYzE0ODJiODRlZTcwZDYkOTkwYTNlMzk4YTk1NDc2NWIwNzhiNmJmZWViNTNlMGE=',
         },
@@ -61,6 +57,11 @@ exports.handler = async (event, context) => {
     
         const bulkData = [];
         returnCommands = [];
+        if (worthBuying){
+            returnCommands.push({command: "heater", value: "on"});
+            returnCommands.push({command: "fan", value: "on"});
+            console.log("Worth buying, turning on heater and fan.");
+        }
         for (const entry of data) {
             bulkData.push(JSON.stringify({
                 "@timestamp": new Date().toISOString(),
@@ -189,19 +190,43 @@ function logicEval(entry){
     }
 }
 
-//remove double commands and return the prioritized value
+//remove double commands and and set returnCommands to the correct order
+//also make sure that if both on and off exists as values for the same command use the one in the prioritizedValues array
+
 function filterCommands(commands){
     var prioritizedValues = [{command: "heater", value: "off"}, {command: "fan", value: "on"}, {command: "pump", value: "on"}];
     var filteredCommands = [];
     var foundCommands = [];
+    var counts = commands.reduce((c, { command: key }) => (c[key] = (c[key] || 0) + 1, c), {});
+    Object.keys(counts).forEach(key => {
+        if (counts[key]<2) delete counts[key];
+      });
+    var comArr = Object.keys(counts);
+    var compObj = {};
     for (const command of commands){
-        if (foundCommands.includes(command.command)){
-            continue;
+        if (comArr.includes(command.command)){
+            if (compObj[command.command]==command.value){
+                compObj[command.command] = command.value;
+            }else{
+                compObj[command.command] = prioritizedValues.find(x => x.command == command.command).value;
+                
+            }
         }
-        foundCommands.push(command.command);
-        filteredCommands.push(prioritizedValues.find(x => x.command == command.command));
+    }
+    for (const command of commands){
+        var dont = false;
+        if (comArr.includes(command.command)){
+            if (command.value == prioritizedValues.find(x => x.command == command.command).value){
+                filteredCommands.push(command);
+            }else{
+                continue;
+            }
+        }else{
+            filteredCommands.push(command);
+        }
     }
     returnCommands = filteredCommands;
+    return returnCommands;
 }
 
 //function that will get the electric prices from tibber
