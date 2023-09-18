@@ -9,13 +9,15 @@ const tibberUrl = "https://api.tibber.com/v1-beta/gql";
 require('array.prototype.flatmap').shim();
 var returnCommands = [];
 exports.handler = async (event, context) => {
+    var responsedata;
     var pricequery = '{ viewer { login name homes { currentSubscription { priceInfo{ today{ energy startsAt level } tomorrow{ energy startsAt level }}}}}}';
     const headers = {
         Authorization: 'Bearer Mjl7mTBUzFZhFwLDA9JP0mhnMVo2tk6R9uBTG3IVntA',
         "Content-Type": 'application/json'
       };
     request(tibberUrl, pricequery, undefined, headers).then((data) => {
-        console.log("data:" + data)
+        console.log("data:" + data);
+        responsedata = data;
     }).catch((error) => {
         console.error('Error fetching data:', error);
       });
@@ -29,7 +31,7 @@ exports.handler = async (event, context) => {
             'Access-Control-Allow-Headers': '*',
             'Access-Control-Allow-Credentials': 'true'
         },
-        body: "{ message: \"breaking after startquery\"}"
+        body: "{ message: "+responsedata+"}"
     };
         const client = new Client({
         cloud: {
