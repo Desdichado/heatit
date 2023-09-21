@@ -110,11 +110,7 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 200,
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*',
-                'Access-Control-Allow-Credentials': 'true'
+                'Content-Type': 'application/json: charset=utf-8'
             },
             body: "{ message: \"Ok\", commands: "+JSON.stringify(returnCommands)+"}"
         };
