@@ -105,7 +105,6 @@ exports.handler = async (event, context) => {
           })
           console.log(erroredDocuments)
         }
-      
         //const count = await client.count({ index: 'sandbatteri-stream-dev' })
         //console.log(count)
         return {
@@ -117,7 +116,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Headers': '*',
                 'Access-Control-Allow-Credentials': 'true'
             },
-            body: "{ message: \"Data received, saved, and forwarded\", commands: "+JSON.stringify(returnCommands)+"}"
+            body: "{ message: \"Ok\", commands: "+JSON.stringify(returnCommands)+"}"
         };
       }
     
@@ -233,7 +232,3 @@ function filterCommands(commands){
     return returnCommands;
 }
 
-//function that will get the electric prices from tibber
-function getPrices(){
-    var extbody;
-}
