@@ -110,9 +110,10 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 200,
             headers: {
-                'Content-Type': 'application/json: charset=utf-8'
+                'Content-Type': 'application/json: charset=utf-8',
+                'content-enconding': 'gzip',
             },
-            body: "{ message: \"Ok\", commands: "+JSON.stringify(returnCommands)+"}"
+            body: "{ \"message\": \"Ok\", \"commands\": "+JSON.stringify(returnCommands)+"}"
         };
       }
     
@@ -133,13 +134,13 @@ function logicEval(entry){
         switch(entry.sensorId){
             case "heaterEntry":
                 if (entry.sensorValue > 630){
-                    returnCommands.push({command: "heater", value: "off"});
+                    returnCommands.push({"command": "heater", "value": "off"});
                     console.log("Temperature before heater is too high. Turning off heater.");
                 }
                 break;
             case "heaterExit":
                 if (entry.sensorValue > 630){
-                    returnCommands.push({command: "heater", value: "off"});
+                    returnCommands.push({"command": "heater", "value": "off"});
                     console.log("Temperature after heater is too high. Turning off heater.");
                 }
                 break;
@@ -152,28 +153,28 @@ function logicEval(entry){
         switch(entry.sensorId){
             case "waterExit":
                 if (entry.sensorValue > 85){
-                    returnCommands.push({command: "heater", value: "off"});
-                    returnCommands.push({command: "fan", value: "off"});
+                    returnCommands.push({"command": "heater", "value": "off"});
+                    returnCommands.push({"command": "fan", "value": "off"});
                     console.log("Water temperature is too high, turning off heater and fan.");
 
                 }
                 break;
             case "waterEntry":
                 if (entry.sensorValue > 80){
-                    returnCommands.push({command: "fan", value: "off"});
-                    returnCommands.push({command: "heater", value: "off"});
+                    returnCommands.push({"command": "fan", "value": "off"});
+                    returnCommands.push({"command": "heater", "value": "off"});
                     console.log("Temperature before heat transfer is too high. Turning off heater and fan.");
                 }
                 break;
             case "waterTank":
                 if (entry.sensorValue > 90){
-                    returnCommands.push({command: "pump", value: "off"});
+                    returnCommands.push({"command": "pump", "value": "off"});
                     console.log("Temperature in water tank is too high. Turning off pump.");
                 }
                 if (entry.sensorValue < 60){
-                    returnCommands.push({command: "pump", value: "on"});
-                    returnCommands.push({command: "heater", value: "on"});
-                    returnCommands.push({command: "fan", value: "on"});
+                    returnCommands.push({"command": "pump", "value": "on"});
+                    returnCommands.push({"command": "heater", "value": "on"});
+                    returnCommands.push({"command": "fan", "value": "on"});
                     console.log("Temperature in water tank too low. Turning on heater, pump and fan.");
                 }
                 break;
