@@ -22,6 +22,7 @@ exports.handler = async (event, context) => {
         console.log(JSON.stringify(data));
         if (acceptablePriceLevels.includes(data.viewer.homes[0].currentSubscription.priceInfo.current.level)){
             worthBuying = true;
+            console.log("worth buying: "+worthBuying+" because of price level: "+data.viewer.homes[0].currentSubscription.priceInfo.current.level);
         }
         console.log("worth buying: "+worthBuying+" because of price level: "+data.viewer.homes[0].currentSubscription.priceInfo.current.level);
         responsedata = JSON.stringify(data);
@@ -61,6 +62,8 @@ exports.handler = async (event, context) => {
             returnCommands.push({command: "heater", value: "on"});
             returnCommands.push({command: "fan", value: "on"});
             console.log("Worth buying, turning on heater and fan.");
+        }else{
+            returnCommands.push({command: "heater", value: "off"});
         }
         for (const entry of data) {
             if (crapdata.includes(entry.sensorValue)){
