@@ -63,7 +63,7 @@ exports.handler = async (event, context) => {
             returnCommands.push({command: "fan", value: "on"});
             console.log("Worth buying, turning on heater and fan.");
         }else{
-            returnCommands.push({command: "heater", value: "off"});
+            returnCommands.push({command: "heater", value: "on"});
         }
         for (const entry of data) {
             if (crapdata.includes(entry.sensorValue)){
