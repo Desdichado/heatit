@@ -20,3 +20,13 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+// Vs code configuration
+.vscode
+
+// arduino output
+.arduino
+
+// Arduino ide files
+.theia
